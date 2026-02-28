@@ -1,0 +1,260 @@
+<!-- templates/modern.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ header.name or "Name" }} — Resume</title>
+
+  <style>
+    @page {
+    margin: 5mm;
+}
+    /* Page layout for PDF-friendly rendering */
+    @page { margin: 28mm 20mm; }
+    html, body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+                   Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      color: #111;
+      background: white;
+      font-size: 11pt;
+      line-height: 1.25;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 18px 8px;
+      box-sizing: border-box;
+    }
+
+    /* Header (centered top) */
+    .header {
+      text-align: center;
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #e6e6e6;
+    }
+    .name {
+      font-size: 20pt;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      margin-bottom: 6px;
+    }
+    .contact {
+      font-size: 9.5pt;
+      color: #333;
+    }
+    .contact a { color: inherit; text-decoration: none; }
+
+    /* Two-column meta row (skills on top) */
+    .section {
+      margin-top: 12px;
+    }
+    .section-title {
+      font-weight: 700;
+      font-size: 10pt;
+      margin-bottom: 6px;
+      color: #0b63a5;
+    }
+
+    .skills-line {
+      font-size: 10pt;
+      color: #111;
+      margin-bottom: 6px;
+      white-space: pre-wrap;
+    }
+
+    /* Experience / Projects list */
+    .item {
+      margin-bottom: 10px;
+    }
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .company {
+      font-weight: 700;
+      font-size: 10pt;
+    }
+    .meta {
+      font-size: 9pt;
+      color: #666;
+    }
+    .role {
+      font-size: 9.5pt;
+      margin: 4px 0 6px 0;
+      color: #111;
+    }
+    ul.bullets {
+      margin: 0 0 6px 18px;
+      padding: 0;
+    }
+    ul.bullets li {
+      margin-bottom: 6px;
+    }
+    .tech-stack {
+      font-size: 9pt;
+      color: #444;
+      font-style: italic;
+    }
+
+    /* Education / Awards / Footer */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .small {
+      font-size: 9.5pt;
+      color: #111;
+    }
+
+    /* Make sure print/PDF respects layout */
+    @media print {
+      .container { margin: 0; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header (centered) -->
+    <header class="header" role="banner" aria-label="Header">
+      <div class="name">{{ header.name }}</div>
+      <div class="contact">
+        {{ header.email }} | {{ header.phone }}<br/>
+        {% if header.github %}<a href="{{ header.github }}">{{ header.github }}</a>{% endif %}
+        {% if header.linkedin %} | <a href="{{ header.linkedin }}">{{ header.linkedin }}</a>{% endif %}
+      </div>
+    </header>
+
+    <!-- Summary (optional) -->
+    {% if summary %}
+    <section class="section" aria-label="Professional summary">
+      <div class="section-title">Professional Summary</div>
+      <div class="small">{{ summary }}</div>
+    </section>
+    {% endif %}
+
+    <!-- Skills -->
+     
+    <section class="section" aria-label="Skills">
+      {% if skills.languages %}
+      <div class="section-title">Skills</div>
+      <div class="skills-line">
+        <strong>Languages:</strong>
+        {{ skills.languages | join(', ') }}
+      </div>
+      {% endif %}
+      {% if skills.technologies %}
+      <div class="skills-line">
+        <strong>Frameworks & Technologies:</strong>
+        {{ skills.technologies | join(', ') }}
+      </div>
+      {% endif %}
+      {% if skills.tools %}
+      <div class="skills-line">
+        <strong>Tools:</strong>
+        {{ skills.tools | join(', ') }}
+      </div>
+      {% endif %}
+    </section>
+
+    <!-- Work Experience -->
+    {% if experience %}
+    <section class="section" aria-label="Work experience">
+      <div class="section-title">Work Experience</div>
+
+      {% for exp in experience %}
+      <article class="item" itemscope itemtype="http://schema.org/WorkExperience">
+        <div class="item-header">
+          <div>
+            <div class="company">{{ exp.company }}{% if exp.location %}, {{ exp.location }}{% endif %}</div>
+            <div class="role">{{ exp.role }}</div>
+          </div>
+          <div class="meta">{{ exp.start_date }}{% if exp.end_date %} - {{ exp.end_date }}{% else %} - Present{% endif %}</div>
+        </div>
+
+        {% if exp.bullets %}
+        <ul class="bullets">
+          {% for b in exp.bullets %}
+          <li>{{ b }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if exp.tech_stack %}
+        <div class="tech-stack">Tech: {{ exp.tech_stack | join(', ') }}</div>
+        {% endif %}
+      </article>
+      {% endfor %}
+
+    </section>
+    {% endif %}
+
+    <!-- Education -->
+    {% if education %}
+    <section class="section" aria-label="Education">
+      <div class="section-title">Education</div>
+      {% for edu in education %}
+      <div class="item">
+        <div class="item-header">
+          <div>
+            <div class="company">{{ edu.institution }}</div>
+            <div class="role">{{ edu.degree }}{% if edu.cgpa %} • CGPA: {{ edu.cgpa }}{% endif %}</div>
+          </div>
+          <div class="meta">{{ edu.start_date }}{% if edu.end_date %} - {{ edu.end_date }}{% endif %}</div>
+        </div>
+        {% if edu.coursework %}
+        <div class="small">Relevant Coursework: {{ edu.coursework | join(', ') }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    <!-- Projects -->
+    {% if projects %}
+    <section class="section" aria-label="Projects">
+      <div class="section-title">Project Work</div>
+      {% for p in projects %}
+      <div class="item">
+        <div class="item-header">
+          <div class="company">{{ p.name }} {% if p.year %} ({{ p.year }}){% endif %}</div>
+        </div>
+        {% if p.description_bullets %}
+        <ul class="bullets">
+          {% for b in p.description_bullets %}
+          <li>{{ b }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="small">{{ p.description }}</div>
+        {% endif %}
+        {% if p.tech_stack %}
+        <div class="tech-stack">Tech: {{ p.tech_stack | join(', ') }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    <!-- Awards / Certifications -->
+    {% if awards %}
+    <section class="section" aria-label="Awards and certificates">
+      <div class="section-title">Awards & Certifications</div>
+      <ul class="bullets">
+        {% for a in awards %}
+        <li>{{ a }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+  </div> <!-- /.container -->
+</body>
+</html>
