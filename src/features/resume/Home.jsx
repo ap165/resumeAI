@@ -21,11 +21,6 @@ const steps = [
   "Check ATS score and refine before applying.",
 ];
 
-const stats = [
-  { value: "50k+", label: "Resumes created" },
-  { value: "92%", label: "Average ATS match improvement" },
-  { value: "4.9/5", label: "User satisfaction" },
-];
 
 const Home = () => {
   return (
@@ -36,9 +31,6 @@ const Home = () => {
 
         <div className="relative grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div>
-            <p className="mb-4 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-indigo-100">
-              Trusted by students, professionals & career switchers
-            </p>
             <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl">
               Build a job-winning resume with <span className="text-indigo-200">ResumeAI</span>
             </h1>
@@ -129,15 +121,6 @@ const Home = () => {
         >
           Create My Resume
         </Link>
-      </section>
-
-      <section className="grid gap-4 rounded-3xl border border-slate-200 bg-slate-900 p-8 text-white sm:grid-cols-3">
-        {stats.map((stat) => (
-          <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-3xl font-extrabold">{stat.value}</p>
-            <p className="mt-1 text-sm text-slate-300">{stat.label}</p>
-          </div>
-        ))}
       </section>
     </div>
   );
