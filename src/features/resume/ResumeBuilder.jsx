@@ -23,8 +23,6 @@ const emptyLink = {
   description: "",
 };
 
-const hasFilledData = (item) => Object.values(item).some((value) => String(value).trim() !== "");
-
 const createSummaryFromData = (form) => {
   const name = form.personal.name || "Candidate";
   const title = form.experiences[0]?.jobTitle || "professional";
@@ -90,23 +88,6 @@ const ResumeBuilder = () => {
       ...prev,
       [section]: [...prev[section], { ...template }],
     }));
-  };
-
-  const removeItem = (section, index) => {
-    setForm((prev) => {
-      const target = prev[section][index];
-      if (!target) return prev;
-
-      if (hasFilledData(target)) {
-        const shouldRemove = window.confirm("This section contains data. Remove it and lose entered information?");
-        if (!shouldRemove) return prev;
-      }
-
-      return {
-        ...prev,
-        [section]: prev[section].filter((_, itemIndex) => itemIndex !== index),
-      };
-    });
   };
 
   const enhanceText = (section, index, field) => {
@@ -179,18 +160,7 @@ const ResumeBuilder = () => {
           <div className="space-y-6">
             {form.experiences.map((experience, index) => (
               <div key={index} className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="font-semibold text-slate-900">Experience {index + 1}</h3>
-                  {index > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => removeItem("experiences", index)}
-                      className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
+                <h3 className="font-semibold text-slate-900">Experience {index + 1}</h3>
                 <div className="grid gap-4 md:grid-cols-2">
                   {[
                     ["jobTitle", "Job Title"],
@@ -244,18 +214,7 @@ const ResumeBuilder = () => {
           <div className="space-y-6">
             {form.educations.map((education, index) => (
               <div key={index} className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="font-semibold text-slate-900">Education {index + 1}</h3>
-                  {index > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => removeItem("educations", index)}
-                      className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
+                <h3 className="font-semibold text-slate-900">Education {index + 1}</h3>
                 <div className="grid gap-4 md:grid-cols-2">
                   {[
                     ["schoolName", "School Name"],
