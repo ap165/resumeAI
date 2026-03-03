@@ -1,4 +1,5 @@
 from app.app import create_app
+import flask_cors
 
 app = create_app()
 

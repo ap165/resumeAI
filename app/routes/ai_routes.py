@@ -5,13 +5,10 @@ ai = Blueprint('ai', __name__, url_prefix='/ai')
 
 @ai.route('/response', methods=['POST'])
 def ai_response():
-    data = request.get_json()
-    prompt = data.get('prompt', '')
-    if not prompt:
-        return jsonify({"error": "Prompt is required"}), 400
-    
-    try:
-        response = get_ai_response(prompt)
-        return jsonify(response)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        data = request.get_json()
+        text = data.get('text', '')
+        try:    
+            response = get_ai_response(text)
+            return jsonify(response)
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
