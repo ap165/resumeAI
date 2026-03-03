@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/layout/Navbar.jsx";
+import Home from "./features/resume/Home.jsx";
 import "./styles/index.css";
 
 const App = () => {
@@ -8,7 +9,7 @@ const App = () => {
       <Navbar />
       <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <Routes>
-          <Route path="/" element={<h1 className="text-3xl font-bold">Home</h1>} />
+          <Route path="/" element={<Home />} />
           <Route path="/resume-builder" element={<h1 className="text-3xl font-bold">Resume Builder</h1>} />
           <Route path="/ats-score-checker" element={<h1 className="text-3xl font-bold">ATS Score Checker</h1>} />
           <Route path="/about" element={<h1 className="text-3xl font-bold">About</h1>} />
