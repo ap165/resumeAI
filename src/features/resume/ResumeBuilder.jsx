@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { getAiResponse } from "../../api/aiSummery";
 
 const emptyExperience = {
   jobTitle: "",
@@ -54,6 +55,21 @@ const ResumeBuilder = () => {
     summary: "",
     links: [{ ...emptyLink }],
   });
+
+// form data json structure:
+// {
+//   personal: { name, city, country, pinCode, phone, email },
+//   experiences: [{ jobTitle, employer, city, startDate, endDate, responsibilities }],
+//   educations: [{ schoolName, location, degree, fieldOfStudy, graduationDate }],
+//   skills: "",
+//   summary: "",
+//   links: [{ title, url, description }],
+// }  
+
+ if(step === 7) {
+    console.log("Final resume data:", form);
+  }
+
 
   const totalSteps = 7;
 
@@ -114,20 +130,45 @@ const ResumeBuilder = () => {
     });
   };
 
+
+
+  // AI enhancement functions. 
   const enhanceText = (section, index, field) => {
+    console.log("Enhance called for:", section, index, field);
     if (section === "skills") {
-      setForm((prev) => ({
-        ...prev,
-        skills: `${prev.skills}${prev.skills ? "\n" : ""}• Improved, ATS-ready skills statement with action-driven keywords.`,
-      }));
+
+      let prompt = `Enhance the following resume skills section to be more ATS-friendly and impactful:\n\n${form.skills}\n\nPlease improve the phrasing, add relevant keywords, and make it concise.`;
+      const handleEnhanceSkills = async () => {
+        try {
+          const aiResponse = await getAiResponse(prompt);
+          setForm((prev) => ({
+            ...prev,
+            skills: `${aiResponse["choices"][0]["message"]["content"]}`,
+          }));
+        } catch (error) {
+          console.error("Error enhancing skills:", error);
+        }
+      };
+      handleEnhanceSkills();
+      
       return;
     }
 
     if (section === "summary") {
-      setForm((prev) => ({
-        ...prev,
-        summary: `${prev.summary}${prev.summary ? "\n" : ""}Enhanced with AI: concise, impact-focused summary aligned with target roles.`,
-      }));
+      
+      let prompt = `Enhance the following resume summary to be more concise, impactful, and aligned with target roles:\n\n${form.summary}\n\nPlease clarify the candidate's value proposition, highlight key strengths, and make it compelling for recruiters.`;
+
+        const handleEnhanceSummary = async () => {
+        try {          const aiResponse = await getAiResponse(prompt);
+          setForm((prev) => ({
+            ...prev,
+            summary: `${aiResponse["choices"][0]["message"]["content"]}`,
+          }));
+        } catch (error) {
+          console.error("Error enhancing summary:", error);
+        }
+      };
+      handleEnhanceSummary();
       return;
     }
 
@@ -145,10 +186,21 @@ const ResumeBuilder = () => {
   };
 
   const autoGenerateSummary = () => {
-    setForm((prev) => ({
-      ...prev,
-      summary: createSummaryFromData(prev),
-    }));
+    let promptAIGenerate = `Generate a concise and impactful resume summary based on the following information:\n\n${JSON.stringify(form)}\n\nPlease create a professional summary that highlights the candidate's value proposition, key strengths, and is tailored for recruiters.`;
+
+
+    const handleAutoGenerateSummary = async () => {
+      try {
+        const aiResponse = await getAiResponse(promptAIGenerate);
+        setForm((prev) => ({
+          ...prev,
+          summary: `${aiResponse["choices"][0]["message"]["content"]}`,
+        }));
+      } catch (error) {
+        console.error("Error generating summary:", error);
+      }
+    };
+    handleAutoGenerateSummary();
   };
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, totalSteps));
