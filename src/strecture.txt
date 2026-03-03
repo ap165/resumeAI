@@ -1,0 +1,42 @@
+resume-frontend/
+│
+├── public/
+│   └── vite.svg
+│
+├── src/
+│   ├── api/
+│   │   ├── axiosInstance.js
+│   │   └── resumeApi.js
+│   │
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── Navbar.jsx
+│   │   │   └── Footer.jsx
+│   │   └── ui/
+│   │       ├── Button.jsx
+│   │       └── Input.jsx
+│   │
+│   ├── features/
+│   │   └── resume/
+│   │       ├── components/
+│   │       │   ├── ResumeForm.jsx
+│   │       │   ├── TemplateSelector.jsx
+│   │       │   └── ResumePreview.jsx
+│   │       └── hooks/
+│   │           └── useResume.js
+│   │
+│   ├── routes/
+│   │   └── AppRoutes.jsx
+│   │
+│   ├── context/
+│   │   └── ResumeContext.jsx    # optional
+│   │
+│   ├── styles/
+│   │   └── global.css
+│   │
+│   ├── App.jsx
+│   └── main.jsx
+│
+├── .env
+├── package.json
+└── vite.config.js
