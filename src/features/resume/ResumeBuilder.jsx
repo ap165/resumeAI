@@ -90,6 +90,30 @@ const ResumeBuilder = () => {
     }));
   };
 
+  const hasAnyInput = (item) => Object.values(item).some((value) => value.trim() !== "");
+
+  const removeItem = (section, index) => {
+    setForm((prev) => {
+      const item = prev[section][index];
+
+      if (!item || index === 0) {
+        return prev;
+      }
+
+      if (hasAnyInput(item)) {
+        const shouldRemove = window.confirm("This form has unsaved data. Are you sure you want to close it?");
+        if (!shouldRemove) {
+          return prev;
+        }
+      }
+
+      return {
+        ...prev,
+        [section]: prev[section].filter((_, itemIndex) => itemIndex !== index),
+      };
+    });
+  };
+
   const enhanceText = (section, index, field) => {
     if (section === "skills") {
       setForm((prev) => ({
@@ -160,7 +184,18 @@ const ResumeBuilder = () => {
           <div className="space-y-6">
             {form.experiences.map((experience, index) => (
               <div key={index} className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <h3 className="font-semibold text-slate-900">Experience {index + 1}</h3>
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-semibold text-slate-900">Experience {index + 1}</h3>
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => removeItem("experiences", index)}
+                      className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100"
+                    >
+                      Close
+                    </button>
+                  )}
+                </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   {[
                     ["jobTitle", "Job Title"],
@@ -214,7 +249,18 @@ const ResumeBuilder = () => {
           <div className="space-y-6">
             {form.educations.map((education, index) => (
               <div key={index} className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <h3 className="font-semibold text-slate-900">Education {index + 1}</h3>
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-semibold text-slate-900">Education {index + 1}</h3>
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => removeItem("educations", index)}
+                      className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100"
+                    >
+                      Close
+                    </button>
+                  )}
+                </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   {[
                     ["schoolName", "School Name"],
