@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/layout/Navbar.jsx";
 import Home from "./features/resume/Home.jsx";
 import ResumeBuilder from "./features/resume/ResumeBuilder.jsx";
+import About from "./features/resume/About.jsx";
 import "./styles/index.css";
 
 const App = () => {
@@ -13,7 +14,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/resume-builder" element={<ResumeBuilder />} />
           <Route path="/ats-score-checker" element={<h1 className="text-3xl font-bold">ATS Score Checker</h1>} />
-          <Route path="/about" element={<h1 className="text-3xl font-bold">About</h1>} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </main>
     </div>
