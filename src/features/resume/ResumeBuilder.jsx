@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getAiResponse } from "../../api/aiSummery";
 
 const stripHtml = (value = "") => value.replace(/<[^>]*>/g, "").trim();
@@ -12,45 +12,126 @@ const toEditorHtml = (value = "") => {
     return value;
   }
 
-  return value
-    .split("\n")
-    .filter(Boolean)
-    .map((line) => `<p>${line}</p>`)
-    .join("");
+  const lines = value.split("\n");
+  const htmlChunks = [];
+  let listType = null;
+
+  const closeList = () => {
+    if (listType) {
+      htmlChunks.push(`</${listType}>`);
+      listType = null;
+    }
+  };
+
+  const formatInline = (text) =>
+    text
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/__(.+?)__/g, "<u>$1</u>")
+      .replace(/\*(.+?)\*/g, "<em>$1</em>");
+
+  lines.forEach((rawLine) => {
+    const line = rawLine.trim();
+
+    if (!line) {
+      closeList();
+      return;
+    }
+
+    if (/^---+$/.test(line)) {
+      closeList();
+      htmlChunks.push("<hr />");
+      return;
+    }
+
+    const orderedMatch = line.match(/^\d+\.\s+(.+)/);
+    if (orderedMatch) {
+      if (listType !== "ol") {
+        closeList();
+        listType = "ol";
+        htmlChunks.push("<ol>");
+      }
+      htmlChunks.push(`<li>${formatInline(orderedMatch[1])}</li>`);
+      return;
+    }
+
+    const unorderedMatch = line.match(/^[-*]\s+(.+)/);
+    if (unorderedMatch) {
+      if (listType !== "ul") {
+        closeList();
+        listType = "ul";
+        htmlChunks.push("<ul>");
+      }
+      htmlChunks.push(`<li>${formatInline(unorderedMatch[1])}</li>`);
+      return;
+    }
+
+    closeList();
+
+    if (line.startsWith(">")) {
+      htmlChunks.push(`<blockquote>${formatInline(line.replace(/^>\s?/, ""))}</blockquote>`);
+      return;
+    }
+
+    if (line.startsWith("### ")) {
+      htmlChunks.push(`<h3>${formatInline(line.replace(/^###\s+/, ""))}</h3>`);
+      return;
+    }
+
+    htmlChunks.push(`<p>${formatInline(line)}</p>`);
+  });
+
+  closeList();
+  return htmlChunks.join("");
 };
 
 const RichTextEditor = ({ value, onChange, placeholder, minHeight = "140px" }) => {
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    if (!editorRef.current) {
+      return;
+    }
+
+    const nextHtml = toEditorHtml(value);
+    if (editorRef.current.innerHTML !== nextHtml) {
+      editorRef.current.innerHTML = nextHtml;
+    }
+  }, [value]);
+
   const applyFormat = (command) => {
     document.execCommand(command, false, null);
+    editorRef.current?.focus();
   };
 
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap gap-2 rounded-xl border border-slate-200 bg-slate-100 p-2">
         {[
-          ["bold", "Bold"],
-          ["underline", "Underline"],
-          ["insertUnorderedList", "Bullet List"],
-          ["insertOrderedList", "Numbered List"],
-        ].map(([command, label]) => (
+          ["bold", "Bold", "𝐁"],
+          ["underline", "Underline", "U̲"],
+          ["insertUnorderedList", "Bullet List", "•"],
+          ["insertOrderedList", "Numbered List", "1."],
+        ].map(([command, label, icon]) => (
           <button
             key={command}
             type="button"
             onClick={() => applyFormat(command)}
-            className="rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+            title={label}
+            aria-label={label}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white text-sm font-semibold text-slate-700 hover:bg-slate-50"
           >
-            {label}
+            {icon}
           </button>
         ))}
       </div>
       <div
+        ref={editorRef}
         contentEditable
         suppressContentEditableWarning
         className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none"
         style={{ minHeight }}
         data-placeholder={placeholder}
         onInput={(e) => onChange(e.currentTarget.innerHTML)}
-        dangerouslySetInnerHTML={{ __html: toEditorHtml(value) }}
       />
     </div>
   );
@@ -77,20 +158,6 @@ const emptyLink = {
   title: "",
   url: "",
   description: "",
-};
-
-const createSummaryFromData = (form) => {
-  const name = form.personal.name || "Candidate";
-  const title = form.experiences[0]?.jobTitle || "professional";
-  const city = form.personal.city || "your city";
-  const skills = form.skills
-    .split(",")
-    .map((skill) => skill.trim())
-    .filter(Boolean)
-    .slice(0, 4)
-    .join(", ");
-
-  return `${name} is a results-driven ${title} based in ${city}. They bring hands-on experience in delivering high-impact work and collaborating across teams. ${skills ? `Key strengths include ${skills}.` : "They are focused on continuous growth and measurable outcomes."}`;
 };
 
 const ResumeBuilder = () => {
@@ -471,14 +538,15 @@ const ResumeBuilder = () => {
               <div key={index} className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-5">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm font-semibold text-slate-800">Link {index + 1}</p>
-                  <button
-                    type="button"
-                    onClick={() => removeLink(index)}
-                    disabled={form.links.length === 1}
-                    className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    Remove Link
-                  </button>
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => removeLink(index)}
+                      className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100"
+                    >
+                      Remove Link
+                    </button>
+                  )}
                 </div>
                 <div className="grid gap-4 md:grid-cols-3">
                 <label className="space-y-2 text-sm font-medium text-slate-700">
