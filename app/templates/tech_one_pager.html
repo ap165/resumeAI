@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body{margin:24px;font-family:"Segoe UI",Tahoma,sans-serif;color:#0f172a;background:#fff}
+header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #0ea5e9;padding-bottom:10px}
+h1{margin:0;font-size:32px}
+.contact{font-size:12px;color:#334155;text-align:right;line-height:1.5}
+.section{margin-top:16px}
+.section h2{font-size:15px;margin:0 0 9px;color:#0369a1;text-transform:uppercase;letter-spacing:1px}
+.panel{border:1px solid #cbd5e1;border-radius:8px;padding:10px 12px;background:#f8fafc}
+.job{margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed #cbd5e1}
+.job:last-child{margin-bottom:0;padding-bottom:0;border-bottom:0}
+.job-title{font-weight:700}
+.meta{font-size:12px;color:#64748b;margin:4px 0}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.tags p, .tags li{display:inline-block;background:#e0f2fe;color:#0c4a6e;padding:4px 8px;border-radius:999px;margin:3px;font-size:12px}
+ul{margin:0 0 0 16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>{{ personal.name }}</h1>
+  <div class="contact">{{ personal.city }}, {{ personal.country }}<br>{{ personal.pinCode }} · {{ personal.phone }}<br>{{ personal.email }}</div>
+</header>
+
+<section class="section">
+  <h2>Summary</h2>
+  <div class="panel">{{ summary | safe }}</div>
+</section>
+
+<div class="grid">
+  <div>
+    <section class="section" style="margin-top:0;">
+      <h2>Experience</h2>
+      <div class="panel">
+      {% for job in experiences %}
+        <div class="job">
+          <div class="job-title">{{ job.jobTitle }} | {{ job.employer }}</div>
+          <div class="meta">{{ job.city }} · {{ job.startDate }} - {{ job.endDate }}</div>
+          <div>{{ job.responsibilities | safe }}</div>
+        </div>
+      {% endfor %}
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Education</h2>
+      <div class="panel">
+      {% for edu in educations %}
+        <div class="job">
+          <div class="job-title">{{ edu.degree }} in {{ edu.fieldOfStudy }}</div>
+          <div class="meta">{{ edu.schoolName }} · {{ edu.location }} · {{ edu.graduationDate }}</div>
+        </div>
+      {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <aside>
+    <section class="section" style="margin-top:0;">
+      <h2>Skills</h2>
+      <div class="panel tags">{{ skills | safe }}</div>
+    </section>
+    <section class="section">
+      <h2>Links</h2>
+      <div class="panel"><ul>{% for link in links %}<li><strong>{{ link.title }}</strong><br>{{ link.url }}</li>{% endfor %}</ul></div>
+    </section>
+  </aside>
+</div>
+</body>
+</html>
