@@ -666,18 +666,17 @@ const ResumeBuilder = () => {
                 className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm focus:border-indigo-500 focus:outline-none"
               >
                 <option value="modern">Modern</option>
-                <option value="classic">Classic</option>
-                <option value="minimal">Minimal</option>
-                <option value="professional">Professional</option>
+                <option value="sidebar">Sidebar</option>
+                <option value="minimalist">Minimal</option>
+                <option value="two_tone_professional">Professional</option>
+                <option value="creative_sidebar">Creative Sidebar</option>
+                <option value="elegant_classic">Elegant Classic</option>
+                <option value="tech_one_pager">Tech One Pager</option>
+                <option value="two_column_clean">Two Column Clean</option>
+                <option value="timeline">Timeline</option>
+                <option value="infographic">Infographic</option>
+                <option value="compact_one_page">Compact One Page</option>
               </select>
-              <a
-                href="http://127.0.0.1:5000/templates/"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-block text-xs font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                Preview all themes
-              </a>
             </div>
             <button type="button" className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500" onClick={createResume}>
               Create Resume
