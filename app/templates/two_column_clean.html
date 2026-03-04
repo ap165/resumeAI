@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+body{font-family:Calibri,Arial,sans-serif;margin:0;color:#1f2937}.container{display:grid;grid-template-columns:1fr 2fr;min-height:100vh}
+.col-left{background:#f3f4f6;padding:30px 22px}.col-right{padding:30px 34px}
+h1{margin:0;font-size:30px}.contact{font-size:12px;line-height:1.6;margin-top:10px}.mod{margin-top:22px}
+.mod h3{font-size:13px;letter-spacing:1.2px;margin:0 0 8px;text-transform:uppercase;color:#374151}
+.mod li,.mod p{font-size:12.5px;line-height:1.6}
+section{margin-bottom:24px}h2{margin:0 0 10px;font-size:20px;color:#111827}.entry{margin-bottom:14px}
+.title{font-size:14px;font-weight:700}.meta{font-size:12px;color:#6b7280;margin:3px 0 5px}
+</style></head><body><div class="container">
+<div class="col-left">
+  <h1>{{ personal.name }}</h1><div class="contact">{{ personal.city }}, {{ personal.country }}<br>{{ personal.pinCode }}<br>{{ personal.phone }}<br>{{ personal.email }}</div>
+  <div class="mod"><h3>Skills</h3>{{ skills | safe }}</div>
+  <div class="mod"><h3>Links</h3><ul>{% for link in links %}<li>{{ link.title }}<br>{{ link.url }}</li>{% endfor %}</ul></div>
+</div>
+<div class="col-right">
+  <section><h2>Summary</h2>{{ summary | safe }}</section>
+  <section><h2>Experience</h2>{% for job in experiences %}<div class="entry"><div class="title">{{ job.jobTitle }} — {{ job.employer }}</div><div class="meta">{{ job.city }} · {{ job.startDate }} - {{ job.endDate }}</div><div>{{ job.responsibilities | safe }}</div></div>{% endfor %}</section>
+  <section><h2>Education</h2>{% for edu in educations %}<div class="entry"><div class="title">{{ edu.degree }} in {{ edu.fieldOfStudy }}</div><div class="meta">{{ edu.schoolName }}, {{ edu.location }}</div><div>Graduation: {{ edu.graduationDate }}</div></div>{% endfor %}</section>
+</div></div></body></html>

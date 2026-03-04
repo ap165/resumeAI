@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+body{margin:0;font-family:'Trebuchet MS',sans-serif;color:#1f2937}.layout{display:flex;min-height:100vh}
+.side{width:32%;background:#111827;color:#f9fafb;padding:36px 24px;position:relative}.side:after{content:'';position:absolute;right:0;top:0;height:100%;width:6px;background:#f59e0b}
+.main{width:68%;padding:34px 38px;background:#fff}
+h1{font-size:31px;margin:0 0 12px}.chip{display:inline-block;background:#374151;padding:4px 8px;border-radius:12px;font-size:11px;margin-right:4px}
+h3{font-size:13px;letter-spacing:1.5px;margin:22px 0 8px;border-bottom:1px solid #4b5563;padding-bottom:6px}
+h2{font-size:19px;margin:0 0 8px;color:#b45309}.card{border-left:3px solid #f59e0b;padding-left:12px;margin-bottom:14px}
+.meta{font-size:12px;color:#6b7280;margin:4px 0}p,li{font-size:12.5px;line-height:1.6}
+</style></head><body>
+<div class="layout">
+  <aside class="side">
+    <h1>{{ personal.name }}</h1>
+    <p>{{ personal.city }}, {{ personal.country }}<br>{{ personal.pinCode }}<br>{{ personal.phone }}<br>{{ personal.email }}</p>
+    <h3>SKILLS</h3>{{ skills | safe }}
+    <h3>LINKS</h3><ul>{% for link in links %}<li>{{ link.title }}<br>{{ link.url }}</li>{% endfor %}</ul>
+  </aside>
+  <main class="main">
+    <section><h2>About Me</h2>{{ summary | safe }}</section>
+    <section><h2>Experience</h2>{% for job in experiences %}<div class="card"><strong>{{ job.jobTitle }} @ {{ job.employer }}</strong><div class="meta">{{ job.city }} · {{ job.startDate }} - {{ job.endDate }}</div><div>{{ job.responsibilities | safe }}</div></div>{% endfor %}</section>
+    <section><h2>Education</h2>{% for edu in educations %}<div class="card"><strong>{{ edu.degree }} in {{ edu.fieldOfStudy }}</strong><div class="meta">{{ edu.schoolName }} — {{ edu.location }}</div><div>Graduation: {{ edu.graduationDate }}</div></div>{% endfor %}</section>
+  </main>
+</div>
+</body></html>

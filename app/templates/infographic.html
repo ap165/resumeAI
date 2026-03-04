@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+body{margin:0;font-family:'Segoe UI',sans-serif;color:#1f2937}.wrap{display:grid;grid-template-columns:30% 70%;min-height:100vh}
+left{display:block}.left{background:#312e81;color:#eef2ff;padding:32px 22px}.right{padding:32px 36px}
+h1{font-size:30px;margin:0}.contact{font-size:12px;line-height:1.55;margin:12px 0 18px}
+.gauge{height:8px;background:#4f46e5;border-radius:6px;margin:6px 0 10px;overflow:hidden}.gauge span{display:block;height:100%;background:#a5b4fc}
+h2{font-size:18px;margin:0 0 10px;color:#312e81}.section{margin-bottom:22px}.job{margin-bottom:12px}.meta{font-size:12px;color:#6b7280;margin:2px 0 5px}
+p,li{font-size:12.5px;line-height:1.58}
+</style></head><body><div class="wrap">
+<div class="left">
+  <h1>{{ personal.name }}</h1>
+  <div class="contact">{{ personal.city }}, {{ personal.country }}<br>{{ personal.pinCode }}<br>{{ personal.phone }}<br>{{ personal.email }}</div>
+  <h3>Skills Snapshot</h3>
+  <div>{{ skills | safe }}</div>
+  <div class="gauge"><span style="width:95%"></span></div>
+  <div class="gauge"><span style="width:88%"></span></div>
+  <div class="gauge"><span style="width:80%"></span></div>
+  <h3>Links</h3>
+  <ul>{% for link in links %}<li>{{ link.title }}<br>{{ link.url }}</li>{% endfor %}</ul>
+</div>
+<div class="right">
+  <div class="section"><h2>Summary</h2>{{ summary | safe }}</div>
+  <div class="section"><h2>Experience</h2>{% for job in experiences %}<div class="job"><strong>{{ job.jobTitle }} · {{ job.employer }}</strong><div class="meta">{{ job.city }} | {{ job.startDate }} - {{ job.endDate }}</div><div>{{ job.responsibilities | safe }}</div></div>{% endfor %}</div>
+  <div class="section"><h2>Education</h2>{% for edu in educations %}<p><strong>{{ edu.degree }} in {{ edu.fieldOfStudy }}</strong><br>{{ edu.schoolName }}, {{ edu.location }}<br>Graduation: {{ edu.graduationDate }}</p>{% endfor %}</div>
+</div>
+</div></body></html>

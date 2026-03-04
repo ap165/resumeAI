@@ -2,56 +2,56 @@
   {
     "id": 1,
     "key": "modern",
-    "desc": "Clean modern layout with balanced spacing and strong section hierarchy."
+    "desc": "Modern split layout with dark left sidebar and clean content sections."
   },
   {
     "id": 2,
     "key": "sidebar",
-    "desc": "Two-column layout with sidebar for skills and contact information."
+    "desc": "Bold navy sidebar template with structured profile, experience, and education blocks."
   },
   {
     "id": 3,
     "key": "two_tone_professional",
-    "desc": "Professional two-tone layout with colored section highlights."
+    "desc": "Professional two-tone design with gradient header and cyan-accented sections."
   },
   {
     "id": 4,
     "key": "minimalist",
-    "desc": "Minimal black-and-white ATS-friendly layout."
+    "desc": "Minimal ATS-friendly single-column resume with clean typography and compact spacing."
   },
   {
     "id": 5,
     "key": "creative_sidebar",
-    "desc": "Creative two-column layout with dark sidebar."
+    "desc": "Creative dark-sidebar layout with warm accent lines and card-style experience blocks."
   },
   {
     "id": 6,
     "key": "elegant_classic",
-    "desc": "Elegant serif-based classic resume design."
+    "desc": "Elegant classic serif resume with centered header and timeless styling."
   },
   {
     "id": 7,
     "key": "tech_one_pager",
-    "desc": "Technical one-page layout with skill tags and structured blocks."
+    "desc": "Tech-themed dark one-pager featuring panel sections and highlighted skill tags."
   },
   {
     "id": 8,
     "key": "two_column_clean",
-    "desc": "Clean balanced two-column professional layout."
+    "desc": "Clean two-column professional layout with a light details column and focused main content."
   },
   {
     "id": 9,
     "key": "timeline",
-    "desc": "Vertical timeline-style experience-focused resume."
+    "desc": "Timeline-driven resume emphasizing career progression with a vertical experience track."
   },
   {
     "id": 10,
     "key": "infographic",
-    "desc": "Infographic-style layout with skill bars and side panel."
+    "desc": "Infographic-inspired layout with a colored side panel and skill gauge visuals."
   },
   {
     "id": 11,
     "key": "compact_one_page",
-    "desc": "Compact dense layout optimized to fit one page."
+    "desc": "Dense compact one-page format optimized to fit comprehensive content efficiently."
   }
 ]

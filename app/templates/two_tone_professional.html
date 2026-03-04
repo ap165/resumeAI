@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body{margin:0;font-family:'Segoe UI',sans-serif;color:#1e293b;background:#f8fafc}
+.sheet{max-width:950px;margin:0 auto;background:white}
+.header{background:linear-gradient(90deg,#0f766e,#115e59);color:white;padding:28px 36px}
+.header h1{margin:0;font-size:34px}
+.header p{margin:8px 0 0;font-size:13px;line-height:1.6}
+.grid{display:grid;grid-template-columns:2fr 1fr}
+.main{padding:28px 34px}
+.side{background:#ecfeff;padding:28px 24px}
+h2{font-size:17px;margin:0 0 10px;color:#0f766e;border-bottom:2px solid #99f6e4;padding-bottom:6px}
+.block{margin-bottom:22px}
+.item{margin-bottom:14px}
+.role{font-weight:700;font-size:14px}
+.meta{font-size:12px;color:#334155;margin:4px 0}
+.side h3{font-size:13px;letter-spacing:1.2px;margin:0 0 8px;color:#134e4a}
+.side section{margin-bottom:18px}
+.side li,.side p{font-size:12.5px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="header">
+    <h1>{{ personal.name }}</h1>
+    <p>{{ personal.city }}, {{ personal.country }} · {{ personal.pinCode }}<br>{{ personal.phone }} · {{ personal.email }}</p>
+  </div>
+  <div class="grid">
+    <div class="main">
+      <div class="block"><h2>Professional Summary</h2>{{ summary | safe }}</div>
+      <div class="block"><h2>Experience</h2>
+        {% for job in experiences %}
+          <div class="item">
+            <div class="role">{{ job.jobTitle }} — {{ job.employer }}</div>
+            <div class="meta">{{ job.city }} · {{ job.startDate }} - {{ job.endDate }}</div>
+            <div>{{ job.responsibilities | safe }}</div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="block"><h2>Education</h2>
+        {% for edu in educations %}
+          <div class="item"><strong>{{ edu.degree }} in {{ edu.fieldOfStudy }}</strong><br>{{ edu.schoolName }} · {{ edu.location }}<br>Graduation: {{ edu.graduationDate }}</div>
+        {% endfor %}
+      </div>
+    </div>
+    <aside class="side">
+      <section><h3>SKILLS</h3>{{ skills | safe }}</section>
+      <section><h3>LINKS</h3><ul>{% for link in links %}<li><strong>{{ link.title }}</strong><br>{{ link.url }}</li>{% endfor %}</ul></section>
+    </aside>
+  </div>
+</div>
+</body>
+</html>
