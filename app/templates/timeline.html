@@ -1,25 +1,65 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><style>
-body{margin:0;font-family:Arial,sans-serif;color:#0f172a}.page{padding:30px 36px}
-header{border-bottom:2px solid #0ea5e9;padding-bottom:10px;margin-bottom:22px}h1{margin:0;font-size:32px}
-header p{margin:6px 0 0;font-size:12.5px}h2{font-size:17px;margin:0 0 12px;color:#0369a1}
-.timeline{position:relative;margin-left:8px;padding-left:24px}.timeline:before{content:'';position:absolute;left:5px;top:2px;bottom:2px;width:2px;background:#7dd3fc}
-.node{position:relative;margin-bottom:16px}.node:before{content:'';position:absolute;left:-23px;top:4px;width:10px;height:10px;background:#0ea5e9;border-radius:50%}
-.role{font-size:14px;font-weight:700}.meta{font-size:12px;color:#475569;margin:3px 0 6px}
-.split{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-top:18px}li,p{font-size:12.5px;line-height:1.58}
-.box{background:#f0f9ff;padding:12px;border-radius:8px}
-</style></head><body><div class="page">
-<header><h1>{{ personal.name }}</h1><p>{{ personal.city }}, {{ personal.country }} · {{ personal.pinCode }} · {{ personal.phone }} · {{ personal.email }}</p></header>
-<section><h2>Summary</h2>{{ summary | safe }}</section>
-<div class="split">
-  <div>
-    <h2>Career Timeline</h2>
-    <div class="timeline">{% for job in experiences %}<div class="node"><div class="role">{{ job.jobTitle }} — {{ job.employer }}</div><div class="meta">{{ job.startDate }} - {{ job.endDate }} · {{ job.city }}</div><div>{{ job.responsibilities | safe }}</div></div>{% endfor %}</div>
-    <h2>Education</h2>{% for edu in educations %}<p><strong>{{ edu.degree }} in {{ edu.fieldOfStudy }}</strong><br>{{ edu.schoolName }}, {{ edu.location }}<br>Graduation: {{ edu.graduationDate }}</p>{% endfor %}
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body{font-family:"Segoe UI",Arial,sans-serif;margin:30px;color:#1e293b}
+header{text-align:center;margin-bottom:22px}
+h1{margin:0;font-size:34px}
+.contact{font-size:12px;color:#64748b;margin-top:6px}
+.section{margin-top:20px}
+.section h2{font-size:16px;margin:0 0 12px;color:#334155;text-transform:uppercase;letter-spacing:1px}
+.timeline{position:relative;padding-left:24px;border-left:3px solid #38bdf8}
+.event{position:relative;margin-bottom:16px}
+.event:before{content:"";position:absolute;left:-31px;top:4px;width:12px;height:12px;background:#0ea5e9;border-radius:50%}
+.title{font-weight:700}
+.meta{font-size:12px;color:#64748b;margin:3px 0 6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.panel{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px}
+ul{margin:0 0 0 16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>{{ personal.name }}</h1>
+  <div class="contact">{{ personal.city }}, {{ personal.country }} · {{ personal.pinCode }} · {{ personal.phone }} · {{ personal.email }}</div>
+</header>
+
+<section class="section">
+  <h2>Summary</h2>
+  <div class="panel">{{ summary | safe }}</div>
+</section>
+
+<section class="section">
+  <h2>Career Timeline</h2>
+  <div class="timeline">
+    {% for job in experiences %}
+    <div class="event">
+      <div class="title">{{ job.jobTitle }} — {{ job.employer }}</div>
+      <div class="meta">{{ job.startDate }} - {{ job.endDate }} | {{ job.city }}</div>
+      <div>{{ job.responsibilities | safe }}</div>
+    </div>
+    {% endfor %}
   </div>
-  <aside>
-    <div class="box"><h2>Skills</h2>{{ skills | safe }}</div>
-    <div class="box" style="margin-top:12px"><h2>Links</h2><ul>{% for link in links %}<li>{{ link.title }}<br>{{ link.url }}</li>{% endfor %}</ul></div>
-  </aside>
+</section>
+
+<div class="grid">
+  <section class="section" style="margin-top:0;">
+    <h2>Education</h2>
+    <div class="panel">
+      {% for edu in educations %}
+      <div class="event" style="margin-bottom:10px;">
+        <div class="title">{{ edu.degree }} in {{ edu.fieldOfStudy }}</div>
+        <div class="meta">{{ edu.schoolName }} · {{ edu.location }} · {{ edu.graduationDate }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="section" style="margin-top:0;">
+    <h2>Skills & Links</h2>
+    <div class="panel">{{ skills | safe }}</div>
+    <div class="panel" style="margin-top:10px;"><ul>{% for link in links %}<li><strong>{{ link.title }}</strong>: {{ link.url }}</li>{% endfor %}</ul></div>
+  </section>
 </div>
-</div></body></html>
+</body>
+</html>

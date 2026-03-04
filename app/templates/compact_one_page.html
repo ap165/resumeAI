@@ -21,3 +21,70 @@ ul{margin:0;padding-left:14px}li,p{margin:2px 0}
   </aside>
 </div>
 </body></html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body{margin:18px;font-family:Arial,sans-serif;color:#111;font-size:12px;line-height:1.35}
+header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #111;padding-bottom:8px}
+h1{margin:0;font-size:26px}
+.contact{text-align:right;font-size:11px;color:#444}
+.section{margin-top:12px}
+.section h2{margin:0 0 6px;font-size:13px;text-transform:uppercase;border-bottom:1px solid #bbb;padding-bottom:3px}
+.grid{display:grid;grid-template-columns:3fr 2fr;gap:12px}
+.entry{margin-bottom:8px}
+.title{font-weight:700}
+.meta{font-size:11px;color:#666;margin:1px 0 3px}
+ul{margin:0 0 0 14px;padding:0}
+</style>
+</head>
+<body>
+<header>
+  <h1>{{ personal.name }}</h1>
+  <div class="contact">{{ personal.city }}, {{ personal.country }} | {{ personal.pinCode }}<br>{{ personal.phone }} | {{ personal.email }}</div>
+</header>
+
+<div class="grid">
+  <div>
+    <section class="section">
+      <h2>Summary</h2>
+      {{ summary | safe }}
+    </section>
+
+    <section class="section">
+      <h2>Experience</h2>
+      {% for job in experiences %}
+      <div class="entry">
+        <div class="title">{{ job.jobTitle }} — {{ job.employer }}</div>
+        <div class="meta">{{ job.city }} | {{ job.startDate }} - {{ job.endDate }}</div>
+        <div>{{ job.responsibilities | safe }}</div>
+      </div>
+      {% endfor %}
+    </section>
+  </div>
+
+  <div>
+    <section class="section">
+      <h2>Education</h2>
+      {% for edu in educations %}
+      <div class="entry">
+        <div class="title">{{ edu.degree }} in {{ edu.fieldOfStudy }}</div>
+        <div class="meta">{{ edu.schoolName }}</div>
+        <div class="meta">{{ edu.location }} | {{ edu.graduationDate }}</div>
+      </div>
+      {% endfor %}
+    </section>
+
+    <section class="section">
+      <h2>Skills</h2>
+      {{ skills | safe }}
+    </section>
+
+    <section class="section">
+      <h2>Links</h2>
+      <ul>{% for link in links %}<li><strong>{{ link.title }}</strong>: {{ link.url }}</li>{% endfor %}</ul>
+    </section>
+  </div>
+</div>
+</body>
+</html>
