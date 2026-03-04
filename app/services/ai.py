@@ -15,8 +15,8 @@ def get_ai_response(prompt):
                 "content": prompt
             }
         ],
-        "model": "openai/gpt-4",
-        "max_tokens": 150,
+        "model": "arcee-ai/trinity-large-preview:free",
+        "max_tokens": 250,
         "temperature": 0.7
     }
     headers = {

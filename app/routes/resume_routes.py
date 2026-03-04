@@ -4,12 +4,12 @@ from weasyprint import HTML
 import uuid
 # from app.models import dummy_resume_data as data
 
-
 resumes = Blueprint('resumes', __name__, url_prefix='/download', template_folder=templatePath)
 
-@resumes.route('/pdf/<key>', methods=['GET'])
+@resumes.route('/pdf/<key>', methods=['POST'])
 def download_pdf(key):
     data = request.get_json()
+    print(data)
     rendered = render_template(f"{key}.html", **data)
     pdf = HTML(string=rendered).write_pdf() # Generate PDF from rendered HTML
     response = make_response(pdf)

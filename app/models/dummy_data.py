@@ -1,138 +1,46 @@
 resume_data = {
-    "header": {
-        "name": "Ashish Pratap Singh",
-        "email": "xxx@gmail.com",
-        "phone": "XXX-XXX-XXX",
-        "github": "github.com/ashishps1",
-        "linkedin": "linkedin.com/in/ashishps1"
+  "personal": {
+    "name": "Arijit Paine",
+    "city": "Kolkata",
+    "country": "United States",
+    "pinCode": "722104",
+    "phone": "5552264666",
+    "email": "ap165@gmail.com"
+  },
+  "experiences": [
+    {
+      "jobTitle": "Full stack developer",
+      "employer": "TCS",
+      "city": "Kolkata",
+      "startDate": "31/01/2023",
+      "endDate": "31/01/2025",
+      "responsibilities": "<p>Developed and implemented a comprehensive marketing strategy that increased sales by 20% within 6 months, resulting in $500,000 in additional revenue. Conducted market research to identify new opportunities and created targeted campaigns that generated 1000 new leads per month. Managed social media accounts and increased engagement by 50% through creative content and strategic posting, resulting in a 25% increase in website traffic.</p>"
     },
-    "summary": "",
-    "skills": {
-        "languages": [
-            "C/C++",
-            "Java",
-            "Python",
-            "JavaScript",
-            "TypeScript",
-            "SQL"
-        ],
-        "technologies": [
-            "AWS", "EC2", "DynamoDB", "S3", "SQS", "Lambda",
-            "Athena", "Elasticsearch", "Spark", "Hive", "Presto",
-            "Kubernetes", "Docker", "Splunk", "Kafka",
-            "Spring", "Angular", "ReactJS"
-        ],
-        "tools": []
-    },
-    "experience": [
-        {
-            "company": "Adobe",
-            "location": "Bangalore",
-            "role": "Computer Scientist",
-            "start_date": "Mar 2021",
-            "end_date": "Present",
-            "bullets": [
-                "Led migration of Hive and Presto jobs from Qubole to AWS EMR, improving availability and reducing operational costs.",
-                "Reduced custom reports service cost by over 80% by building automated system to disable unused reports.",
-                "Identified unused AWS resources and implemented S3 expiration policies, saving over $50,000 annually."
-            ],
-            "tech_stack": [
-                "AWS", "EC2", "S3", "EMR", "Hive", "Presto",
-                "Qubole", "Kafka", "Druid", "Zookeeper",
-                "MySQL", "Kubernetes", "Docker", "Bazel"
-            ]
-        },
-        {
-            "company": "Amazon",
-            "location": "Bangalore",
-            "role": "Software Development Engineer",
-            "start_date": "Sept 2019",
-            "end_date": "Mar 2021",
-            "bullets": [
-                "Migrated ML workflows to native AWS infrastructure enabling automated scalability.",
-                "Developed batch workflow plugin saving up to $6MM in human labeling costs."
-            ],
-            "tech_stack": [
-                "Java", "Python", "TypeScript",
-                "AWS Step Functions", "AWS Batch", "Lambda",
-                "S3", "DynamoDB", "EC2", "SQS", "SNS",
-                "AWS CDK", "Athena", "Elasticsearch",
-                "LightGBM", "TensorFlow"
-            ]
-        },
-        {
-            "company": "Morgan Stanley",
-            "location": "Bangalore",
-            "role": "Technology Associate",
-            "start_date": "Aug 2017",
-            "end_date": "Aug 2019",
-            "bullets": [
-                "Built visualization tool grouping infrastructure alerts using BFS and Union-Find algorithms.",
-                "Developed ML-powered solution to predict deployment failures."
-            ],
-            "tech_stack": [
-                "Python", "Flask", "ReactJS", "Redux",
-                "Angular", "D3", "Kafka", "DB2",
-                "scikit-learn"
-            ]
-        }
-    ],
-    "education": [
-        {
-            "institution": "BITS Hyderabad",
-            "degree": "B.E. in Computer Science and Engineering",
-            "cgpa": "7.96/10",
-            "start_date": "Aug 2013",
-            "end_date": "Jun 2017",
-            "coursework": [
-                "Object Oriented Programming",
-                "Databases",
-                "Discrete Mathematics",
-                "Data Structures and Algorithms",
-                "Operating Systems",
-                "Computer Networks",
-                "Machine Learning",
-                "Data Mining",
-                "Advanced Data Structures and Algorithms",
-                "Information Retrieval",
-                "Image Processing"
-            ]
-        }
-    ],
-    "projects": [
-        {
-            "name": "Word Lookup Dictionary",
-            "year": "2015",
-            "description_bullets": [
-                "Developed desktop word lookup software using Trie for efficient search.",
-                "Implemented spelling correction using edit distance algorithm.",
-                "Used BeautifulSoup for web scraping."
-            ],
-            "tech_stack": ["Python", "BeautifulSoup"]
-        },
-        {
-            "name": "Alternative-Routes in Road Networks",
-            "year": "2016",
-            "description_bullets": [
-                "Applied Dijkstra’s algorithm for route optimization.",
-                "Implemented collision avoidance via dynamic speed adjustments.",
-                "Built simulation using C++ and OpenGL."
-            ],
-            "tech_stack": ["C++", "OpenGL"]
-        },
-        {
-            "name": "Clustering SSH Attacks",
-            "year": "2016",
-            "description_bullets": [
-                "Applied KMeans clustering on SSH packet data.",
-                "Determined optimal K value for attack grouping."
-            ],
-            "tech_stack": ["Java", "WEKA"]
-        }
-    ],
-    "awards": [
-        "Mentor at Scaler Academy",
-        "Data Engineering Nanodegree - Udacity",
-        "Machine Learning and Deep Learning Specialization - Coursera"
-    ]
+    {
+      "jobTitle": "AI ML",
+      "employer": "TCS",
+      "city": "Indoor",
+      "startDate": "31/01/2025",
+      "endDate": "31/01/2026",
+      "responsibilities": "<p>• Developed and maintained web applications using React.js, Angular.js, and Node.js, resulting in a 20% increase in user engagement.</p><p>• Designed and implemented RESTful APIs using Node.js and Express.js, reducing server response time by 30%.</p><p>• Collaborated with cross-functional teams to deliver high-quality software solutions, resulting in a 15% increase in customer satisfaction.</p><p>• Implemented automated testing and continuous integration using Jenkins and Git, reducing deployment time by 50%.</p><p>• Developed and maintained databases using MySQL and MongoDB, ensuring data integrity and security.</p>"
+    }
+  ],
+  "educations": [
+    {
+      "schoolName": "University of Engineering and Management",
+      "location": "Kolkata, Newtown",
+      "degree": "B.Tech",
+      "fieldOfStudy": "Computer Science and Engineering",
+      "graduationDate": "10/06/2029"
+    }
+  ],
+  "skills": "<p>Proficient in C and Java programming languages, with expertise in developing efficient and scalable software solutions. Skilled in React, with experience in building user-friendly and responsive web applications.</p>",
+  "summary": "<p>Results-driven Full Stack Developer with a strong background in AI/ML and software development. Proven ability to design and implement scalable web applications using React.js, Angular.js, and Node.js, resulting in significant improvements in user engagement and system performance. Adept at developing RESTful APIs and managing databases to ensure data integrity and security. Skilled in automated testing and continuous integration, reducing deployment time and enhancing software quality. With a B.Tech in Computer Science and Engineering, I bring a solid foundation in programming languages like C and Java, coupled with expertise in creating user-friendly and responsive web applications. Seeking to leverage my technical skills and innovative mindset to drive business growth and contribute to the success of a forward-thinking organization.</p>",
+  "links": [
+    {
+      "title": "LinkedIn",
+      "url": "https://linkedin.com/ap165",
+      "description": "linked link"
+    }
+  ]
 }
