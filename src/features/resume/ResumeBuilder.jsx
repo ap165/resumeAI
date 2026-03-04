@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getAiResponse } from "../../api/aiSummery";
 
+import {downloadResume} from "../../api/download";
+
 const stripHtml = (value = "") => value.replace(/<[^>]*>/g, "").trim();
 
 const toEditorHtml = (value = "") => {
@@ -192,11 +194,8 @@ const ResumeBuilder = () => {
     console.log("Final resume data:", form);
   }
 
-
   const totalSteps = 7;
-
   const progress = useMemo(() => `${Math.round((step / totalSteps) * 100)}%`, [step]);
-
   const updatePersonal = (field, value) => {
     setForm((prev) => ({
       ...prev,
@@ -272,9 +271,6 @@ const ResumeBuilder = () => {
       };
     });
   };
-
-
-
   // AI enhancement functions. 
   const enhanceText = (section, index, field) => {
     console.log("Enhance called for:", section, index, field);
@@ -316,21 +312,30 @@ const ResumeBuilder = () => {
       return;
     }
 
-    setForm((prev) => ({
-      ...prev,
-      [section]: prev[section].map((item, itemIndex) =>
-        itemIndex === index
-          ? {
-              ...item,
-              [field]: `${toEditorHtml(item[field])}${item[field] ? "" : "<p>"}Enhanced with AI: clarified impact, metrics, and outcomes.${item[field] ? "" : "</p>"}`,
-            }
-          : item,
-      ),
-    }));
+    let basePrompt = `Enhance the following resume ${field} for the role of ${form.experiences[0]?.jobTitle || "the candidate's most recent job title"}:\n\n${stripHtml(form.experiences[index][field])}\n\nPlease clarify the impact, add relevant metrics if possible, and make it more compelling for recruiters. max token limit is 200.`;
+
+    const handleEnhanceResponsibilities = async () => {
+      try {
+        const aiResponse = await getAiResponse(basePrompt);
+        setForm((prev) => ({
+          ...prev,
+          experiences: prev.experiences.map((item, itemIndex) => itemIndex === index
+            ? {
+                ...item,
+                responsibilities: toEditorHtml(`${aiResponse["choices"][0]["message"]["content"]}`),
+              }
+            : item,
+          ),
+        }));
+      } catch (error) {
+        console.error("Error enhancing responsibilities:", error);
+      }    };
+    handleEnhanceResponsibilities();
+
   };
 
   const autoGenerateSummary = () => {
-    let promptAIGenerate = `Generate a concise and impactful resume summary based on the following information:\n\n${JSON.stringify(form)}\n\nPlease create a professional summary that highlights the candidate's value proposition, key strengths, and is tailored for recruiters.`;
+    let promptAIGenerate = `${JSON.stringify(form)}\n\n Create a professional summary that highlights the candidate's value proposition, key strengths, and is tailored for recruiters.`;
 
 
     const handleAutoGenerateSummary = async () => {
@@ -345,6 +350,14 @@ const ResumeBuilder = () => {
       }
     };
     handleAutoGenerateSummary();
+  };
+
+  // Placeholder for resume creation logic
+  const createResume = () => {
+    // console.log("Creating resume with data:", form);
+    downloadResume(form, "modern");
+    
+    // alert("Resume created! Check the console for the final data structure.");
   };
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, totalSteps));
@@ -616,7 +629,7 @@ const ResumeBuilder = () => {
               </div>
             </div>
 
-            <button type="button" className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500">
+            <button type="button" className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500" onClick={createResume}>
               Create Resume
             </button>
           </div>
