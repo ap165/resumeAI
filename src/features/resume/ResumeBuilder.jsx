@@ -164,6 +164,11 @@ const emptyLink = {
 
 const ResumeBuilder = () => {
   const [step, setStep] = useState(1);
+  const [selectedTheme, setSelectedTheme] = useState("modern");
+  const [aiLoadingState, setAiLoadingState] = useState({
+    active: false,
+    message: "",
+  });
   const [form, setForm] = useState({
     personal: {
       name: "",
@@ -271,13 +276,22 @@ const ResumeBuilder = () => {
       };
     });
   };
-  // AI enhancement functions. 
+  const startAiLoading = (message) => {
+    setAiLoadingState({ active: true, message });
+  };
+
+  const stopAiLoading = () => {
+    setAiLoadingState({ active: false, message: "" });
+  };
+
+  // AI enhancement functions.
   const enhanceText = (section, index, field) => {
     console.log("Enhance called for:", section, index, field);
     if (section === "skills") {
 
       let prompt = `Enhance the following resume skills section to be more ATS-friendly and impactful:\n\n${stripHtml(form.skills)}\n\nPlease improve the phrasing, add relevant keywords, and make it concise.`;
       const handleEnhanceSkills = async () => {
+        startAiLoading("Enhancing your skills with AI...");
         try {
           const aiResponse = await getAiResponse(prompt);
           console.log("AI response for skills enhancement:", aiResponse);
@@ -287,6 +301,8 @@ const ResumeBuilder = () => {
           }));
         } catch (error) {
           console.log("Error enhancing skills:", error);
+        } finally {
+          stopAiLoading();
         }
       };
       handleEnhanceSkills();
@@ -299,6 +315,7 @@ const ResumeBuilder = () => {
       let prompt = `Enhance the following resume summary to be more concise, impactful, and aligned with target roles:\n\n${stripHtml(form.summary)}\n\nPlease clarify the candidate's value proposition, highlight key strengths, and make it compelling for recruiters.`;
 
         const handleEnhanceSummary = async () => {
+        startAiLoading("Enhancing your summary with AI...");
         try {          const aiResponse = await getAiResponse(prompt);
           setForm((prev) => ({
             ...prev,
@@ -306,6 +323,8 @@ const ResumeBuilder = () => {
           }));
         } catch (error) {
           console.error("Error enhancing summary:", error);
+        } finally {
+          stopAiLoading();
         }
       };
       handleEnhanceSummary();
@@ -315,6 +334,7 @@ const ResumeBuilder = () => {
     let basePrompt = `Enhance the following resume ${field} for the role of ${form.experiences[0]?.jobTitle || "the candidate's most recent job title"}:\n\n${stripHtml(form.experiences[index][field])}\n\nPlease clarify the impact, add relevant metrics if possible, and make it more compelling for recruiters. max token limit is 200.`;
 
     const handleEnhanceResponsibilities = async () => {
+      startAiLoading("Enhancing your experience section with AI...");
       try {
         const aiResponse = await getAiResponse(basePrompt);
         setForm((prev) => ({
@@ -329,7 +349,10 @@ const ResumeBuilder = () => {
         }));
       } catch (error) {
         console.error("Error enhancing responsibilities:", error);
-      }    };
+      } finally {
+        stopAiLoading();
+      }
+    };
     handleEnhanceResponsibilities();
 
   };
@@ -339,6 +362,7 @@ const ResumeBuilder = () => {
 
 
     const handleAutoGenerateSummary = async () => {
+      startAiLoading("Generating your summary with AI...");
       try {
         const aiResponse = await getAiResponse(promptAIGenerate);
         setForm((prev) => ({
@@ -347,6 +371,8 @@ const ResumeBuilder = () => {
         }));
       } catch (error) {
         console.error("Error generating summary:", error);
+      } finally {
+        stopAiLoading();
       }
     };
     handleAutoGenerateSummary();
@@ -355,7 +381,7 @@ const ResumeBuilder = () => {
   // Placeholder for resume creation logic
   const createResume = () => {
     // console.log("Creating resume with data:", form);
-    downloadResume(form, "modern");
+    downloadResume(form, selectedTheme);
     
     // alert("Resume created! Check the console for the final data structure.");
   };
@@ -629,6 +655,30 @@ const ResumeBuilder = () => {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-slate-700" htmlFor="resume-theme">
+                Choose resume theme
+              </label>
+              <select
+                id="resume-theme"
+                value={selectedTheme}
+                onChange={(event) => setSelectedTheme(event.target.value)}
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm focus:border-indigo-500 focus:outline-none"
+              >
+                <option value="modern">Modern</option>
+                <option value="classic">Classic</option>
+                <option value="minimal">Minimal</option>
+                <option value="professional">Professional</option>
+              </select>
+              <a
+                href="http://127.0.0.1:5000/templates/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block text-xs font-semibold text-indigo-600 hover:text-indigo-500"
+              >
+                Preview all themes
+              </a>
+            </div>
             <button type="button" className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500" onClick={createResume}>
               Create Resume
             </button>
@@ -640,7 +690,17 @@ const ResumeBuilder = () => {
   };
 
   return (
-    <section className="mx-auto max-w-4xl space-y-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <>
+      {aiLoadingState.active && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 px-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl">
+            <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" />
+            <h3 className="text-base font-semibold text-slate-900">Please wait</h3>
+            <p className="mt-1 text-sm text-slate-600">{aiLoadingState.message || "AI is working on your request..."}</p>
+          </div>
+        </div>
+      )}
+      <section className="mx-auto max-w-4xl space-y-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       <header className="space-y-3">
         <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600">Resume Builder</p>
         <h1 className="text-3xl font-bold text-slate-900">Multi-step AI Resume Builder</h1>
@@ -671,7 +731,8 @@ const ResumeBuilder = () => {
           Next
         </button>
       </div>
-    </section>
+      </section>
+    </>
   );
 };
 
