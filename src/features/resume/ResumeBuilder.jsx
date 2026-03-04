@@ -141,12 +141,13 @@ const ResumeBuilder = () => {
       const handleEnhanceSkills = async () => {
         try {
           const aiResponse = await getAiResponse(prompt);
+          console.log("AI response for skills enhancement:", aiResponse);
           setForm((prev) => ({
             ...prev,
             skills: `${aiResponse["choices"][0]["message"]["content"]}`,
           }));
         } catch (error) {
-          console.error("Error enhancing skills:", error);
+          console.log("Error enhancing skills:", error);
         }
       };
       handleEnhanceSkills();
