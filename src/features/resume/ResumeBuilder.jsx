@@ -1,6 +1,61 @@
 import { useMemo, useState } from "react";
 import { getAiResponse } from "../../api/aiSummery";
 
+const stripHtml = (value = "") => value.replace(/<[^>]*>/g, "").trim();
+
+const toEditorHtml = (value = "") => {
+  if (!value) {
+    return "";
+  }
+
+  if (value.includes("<") && value.includes(">")) {
+    return value;
+  }
+
+  return value
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => `<p>${line}</p>`)
+    .join("");
+};
+
+const RichTextEditor = ({ value, onChange, placeholder, minHeight = "140px" }) => {
+  const applyFormat = (command) => {
+    document.execCommand(command, false, null);
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex flex-wrap gap-2 rounded-xl border border-slate-200 bg-slate-100 p-2">
+        {[
+          ["bold", "Bold"],
+          ["underline", "Underline"],
+          ["insertUnorderedList", "Bullet List"],
+          ["insertOrderedList", "Numbered List"],
+        ].map(([command, label]) => (
+          <button
+            key={command}
+            type="button"
+            onClick={() => applyFormat(command)}
+            className="rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <div
+        contentEditable
+        suppressContentEditableWarning
+        className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none"
+        style={{ minHeight }}
+        data-placeholder={placeholder}
+        onInput={(e) => onChange(e.currentTarget.innerHTML)}
+        dangerouslySetInnerHTML={{ __html: toEditorHtml(value) }}
+      />
+    </div>
+  );
+};
+
 const emptyExperience = {
   jobTitle: "",
   employer: "",
@@ -130,6 +185,27 @@ const ResumeBuilder = () => {
     });
   };
 
+  const removeLink = (index) => {
+    setForm((prev) => {
+      if (prev.links.length === 1) {
+        return prev;
+      }
+
+      const item = prev.links[index];
+      if (item && hasAnyInput(item)) {
+        const shouldRemove = window.confirm("This link has data. Are you sure you want to remove it?");
+        if (!shouldRemove) {
+          return prev;
+        }
+      }
+
+      return {
+        ...prev,
+        links: prev.links.filter((_, itemIndex) => itemIndex !== index),
+      };
+    });
+  };
+
 
 
   // AI enhancement functions. 
@@ -137,14 +213,14 @@ const ResumeBuilder = () => {
     console.log("Enhance called for:", section, index, field);
     if (section === "skills") {
 
-      let prompt = `Enhance the following resume skills section to be more ATS-friendly and impactful:\n\n${form.skills}\n\nPlease improve the phrasing, add relevant keywords, and make it concise.`;
+      let prompt = `Enhance the following resume skills section to be more ATS-friendly and impactful:\n\n${stripHtml(form.skills)}\n\nPlease improve the phrasing, add relevant keywords, and make it concise.`;
       const handleEnhanceSkills = async () => {
         try {
           const aiResponse = await getAiResponse(prompt);
           console.log("AI response for skills enhancement:", aiResponse);
           setForm((prev) => ({
             ...prev,
-            skills: `${aiResponse["choices"][0]["message"]["content"]}`,
+            skills: toEditorHtml(`${aiResponse["choices"][0]["message"]["content"]}`),
           }));
         } catch (error) {
           console.log("Error enhancing skills:", error);
@@ -157,13 +233,13 @@ const ResumeBuilder = () => {
 
     if (section === "summary") {
       
-      let prompt = `Enhance the following resume summary to be more concise, impactful, and aligned with target roles:\n\n${form.summary}\n\nPlease clarify the candidate's value proposition, highlight key strengths, and make it compelling for recruiters.`;
+      let prompt = `Enhance the following resume summary to be more concise, impactful, and aligned with target roles:\n\n${stripHtml(form.summary)}\n\nPlease clarify the candidate's value proposition, highlight key strengths, and make it compelling for recruiters.`;
 
         const handleEnhanceSummary = async () => {
         try {          const aiResponse = await getAiResponse(prompt);
           setForm((prev) => ({
             ...prev,
-            summary: `${aiResponse["choices"][0]["message"]["content"]}`,
+            summary: toEditorHtml(`${aiResponse["choices"][0]["message"]["content"]}`),
           }));
         } catch (error) {
           console.error("Error enhancing summary:", error);
@@ -179,7 +255,7 @@ const ResumeBuilder = () => {
         itemIndex === index
           ? {
               ...item,
-              [field]: `${item[field]}${item[field] ? "\n" : ""}Enhanced with AI: clarified impact, metrics, and outcomes.`,
+              [field]: `${toEditorHtml(item[field])}${item[field] ? "" : "<p>"}Enhanced with AI: clarified impact, metrics, and outcomes.${item[field] ? "" : "</p>"}`,
             }
           : item,
       ),
@@ -195,7 +271,7 @@ const ResumeBuilder = () => {
         const aiResponse = await getAiResponse(promptAIGenerate);
         setForm((prev) => ({
           ...prev,
-          summary: `${aiResponse["choices"][0]["message"]["content"]}`,
+          summary: toEditorHtml(`${aiResponse["choices"][0]["message"]["content"]}`),
         }));
       } catch (error) {
         console.error("Error generating summary:", error);
@@ -277,12 +353,10 @@ const ResumeBuilder = () => {
                   >
                     Enhance with AI
                   </button>
-                  <textarea
-                    rows={6}
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none"
+                  <RichTextEditor
                     placeholder={`What did you do in ${experience.jobTitle || "this role"}?`}
                     value={experience.responsibilities}
-                    onChange={(e) => updateArrayField("experiences", index, "responsibilities", e.target.value)}
+                    onChange={(value) => updateArrayField("experiences", index, "responsibilities", value)}
                   />
                 </div>
               </div>
@@ -355,12 +429,11 @@ const ResumeBuilder = () => {
             >
               Enhance with AI
             </button>
-            <textarea
-              rows={10}
-              className="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none"
+            <RichTextEditor
+              minHeight="220px"
               placeholder="Add your skills (technical, tools, soft skills, etc.)"
               value={form.skills}
-              onChange={(e) => setForm((prev) => ({ ...prev, skills: e.target.value }))}
+              onChange={(value) => setForm((prev) => ({ ...prev, skills: value }))}
             />
           </div>
         );
@@ -383,12 +456,11 @@ const ResumeBuilder = () => {
                 Enhance with AI
               </button>
             </div>
-            <textarea
-              rows={10}
-              className="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none"
+            <RichTextEditor
+              minHeight="220px"
               placeholder="Write a short professional summary"
               value={form.summary}
-              onChange={(e) => setForm((prev) => ({ ...prev, summary: e.target.value }))}
+              onChange={(value) => setForm((prev) => ({ ...prev, summary: value }))}
             />
           </div>
         );
@@ -396,7 +468,19 @@ const ResumeBuilder = () => {
         return (
           <div className="space-y-6">
             {form.links.map((link, index) => (
-              <div key={index} className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 md:grid-cols-3">
+              <div key={index} className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-semibold text-slate-800">Link {index + 1}</p>
+                  <button
+                    type="button"
+                    onClick={() => removeLink(index)}
+                    disabled={form.links.length === 1}
+                    className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Remove Link
+                  </button>
+                </div>
+                <div className="grid gap-4 md:grid-cols-3">
                 <label className="space-y-2 text-sm font-medium text-slate-700">
                   <span>Title</span>
                   <input
@@ -424,6 +508,7 @@ const ResumeBuilder = () => {
                     placeholder="About this link"
                   />
                 </label>
+                </div>
               </div>
             ))}
 
@@ -457,7 +542,7 @@ const ResumeBuilder = () => {
                   <div key={index}>
                     <p className="font-medium">{experience.jobTitle || "Job Title"} {experience.employer ? `— ${experience.employer}` : ""}</p>
                     <p className="text-slate-500">{[experience.city, experience.startDate, experience.endDate].filter(Boolean).join(" | ")}</p>
-                    <p className="whitespace-pre-line">{experience.responsibilities}</p>
+                    <div className="prose prose-sm max-w-none text-slate-700" dangerouslySetInnerHTML={{ __html: toEditorHtml(experience.responsibilities) }} />
                   </div>
                 ))}
               </div>
