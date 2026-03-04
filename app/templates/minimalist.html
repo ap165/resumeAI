@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body { font-family: Arial, sans-serif; margin: 36px; color: #111; font-size: 13px; }
+h1 { font-size: 30px; margin: 0; letter-spacing: 1px; }
+.contact { margin: 4px 0 18px; color: #444; }
+.section { margin-top: 20px; }
+.section h2 { font-size: 14px; border-bottom: 1px solid #111; padding-bottom: 4px; margin-bottom: 10px; text-transform: uppercase; }
+.job { margin-bottom: 12px; }
+.job-title { font-weight: bold; }
+.meta { font-size: 12px; color: #555; margin: 2px 0 4px; }
+ul { margin: 5px 0 0 18px; }
+li { margin-bottom: 5px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+</style>
+</head>
+<body>
+<h1>{{ personal.name }}</h1>
+<div class="contact">{{ personal.city }}, {{ personal.country }} | {{ personal.pinCode }} | {{ personal.phone }} | {{ personal.email }}</div>
+
+<div class="section">
+  <h2>Summary</h2>
+  {{ summary | safe }}
+</div>
+
+<div class="section">
+  <h2>Experience</h2>
+  {% for job in experiences %}
+  <div class="job">
+    <div class="job-title">{{ job.jobTitle }} — {{ job.employer }}</div>
+    <div class="meta">{{ job.city }} | {{ job.startDate }} - {{ job.endDate }}</div>
+    <div>{{ job.responsibilities | safe }}</div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="grid">
+  <div class="section">
+    <h2>Education</h2>
+    {% for edu in educations %}
+    <div class="job">
+      <div class="job-title">{{ edu.degree }} in {{ edu.fieldOfStudy }}</div>
+      <div class="meta">{{ edu.schoolName }}, {{ edu.location }}</div>
+      <div>Graduation: {{ edu.graduationDate }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="section">
+    <h2>Skills</h2>
+    {{ skills | safe }}
+    <h2 style="margin-top:16px;">Links</h2>
+    <ul>
+      {% for link in links %}
+      <li><strong>{{ link.title }}:</strong> {{ link.url }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+</body>
+</html>
