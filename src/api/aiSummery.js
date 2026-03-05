@@ -1,4 +1,4 @@
-const BASE_URL = "http://56.228.14.44:8000/ai/response";
+const BASE_URL = "https://api.resumeai.arijit.co.in/ai/response";
 
 import axios from "axios";
 

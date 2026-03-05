@@ -2,7 +2,7 @@ import axios from "axios"
 // random string generator for filename
 import { v4 as uuidv4 } from 'uuid';
 
-const BASE_URL = "http://56.228.14.44:8000/download/pdf";
+const BASE_URL = "https://api.resumeai.arijit.co.in/download/pdf";
 
 const downloadResume = async (resumeData, theme) => {
     try {
