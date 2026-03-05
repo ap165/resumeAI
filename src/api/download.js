@@ -1,6 +1,8 @@
 import axios from "axios"
+// random string generator for filename
+import { v4 as uuidv4 } from 'uuid';
 
-const BASE_URL = "http://127.0.0.1:5000/download/pdf";
+const BASE_URL = "http://56.228.14.44:8000/download/pdf";
 
 const downloadResume = async (resumeData, theme) => {
     try {
@@ -14,12 +16,12 @@ const downloadResume = async (resumeData, theme) => {
 
         const disposition = response.headers["content-disposition"];
 
-        let filename = "resume.pdf";
-
-        if (disposition) {
-            const match = disposition.match(/filename="?(.+)"?/);
-            if (match.length === 2) {
-            filename = match[1];
+        let filename = `resume_${uuidv4()}.pdf`; // Default filename with random string
+        if (disposition && disposition.indexOf('attachment') !== -1) {
+            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) { 
+                filename = matches[1].replace(/['"]/g, ''); // Remove any quotes around the filename
             }
         }
 
